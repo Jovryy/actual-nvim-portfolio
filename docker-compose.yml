@@ -1,28 +1,41 @@
 services:
   portfolio:
+    build: .
     image: portfolio-img
     container_name: portfolio
     restart: unless-stopped
-
-    ports:
-      - "8080:7681" #http:ttyd
-
+# if you dont want to use anubis
+#    ports:
+#      - "8080:7681" #http:ttyd
+#
+# exposing ttyd port only so anubis cant be bypassed
+    expose:
+      - "7681"
     read_only: true
-
     cap_drop:
       - ALL # strip root inside the container of his privileges 
-
     security_opt: 
       - no-new-privileges:true #forbid system from granting higher privileges if vulnerability is exploited
-
     tmpfs:
       - /tmp
-
     deploy:
       resources:
         limits:
           cpus: '0.5'
           memory: 256M 
+
+  anubis:
+    image: ghcr.io/techarohq/anubis:latest
+    container_name: anubis
+    restart: unless-stopped
+    ports:
+      - "8080:8923"
+    environment:
+      - TARGET=http://portfolio:7681
+      - BIND=:8923
+      - COOKIE_SECURE=false #Required for local testing, comment out for production.
+    depends_on:
+      - portfolio
 
 # uncomment for production to block the outbound internet access from inside the container
 #  networks:
