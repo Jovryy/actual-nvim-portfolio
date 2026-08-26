@@ -3,12 +3,7 @@ services:
     build: .
     image: portfolio-img
     container_name: portfolio
-    restart: unless-stopped
-# if you dont want to use anubis
-#    ports:
-#      - "8080:7681" #http:ttyd
-#
-# exposing ttyd port only so anubis cant be bypassed
+    restart: always
     expose:
       - "7681"
     read_only: true
@@ -17,12 +12,20 @@ services:
     security_opt: 
       - no-new-privileges:true #forbid system from granting higher privileges if vulnerability is exploited
     tmpfs:
-      - /tmp
+      - /tmp:size=10M,noexec,nosuid # preventing people from executing scripts written inside /tmp file system. Though they can still leave some messages for others :P Also limiting the space so they cannot just exhaust ram via tmpfs.
+      - /run:size=5M,noexec,nosuid
     deploy:
       resources:
         limits:
           cpus: '0.5'
-          memory: 256M 
+          memory: 256M
+          pids: 50 #locking down nvim entirely is a Sisyphean task... it's readonly anyways, just limit the pids to prevent forkbombs from causing harm and we're set :) If you at some point catch a troll who runs a DoS payload, just delete terminal access for everyone... it is what it is...
+    ulimits: #kills trolls' infinite loops like ":lua while true do end" by limiting a process's max cpu time to 3s 
+      cpu:
+        soft: 3
+        hard: 3
+    networks:
+      - safe
 
   anubis:
     image: ghcr.io/techarohq/anubis:latest
@@ -33,6 +36,8 @@ services:
       - BIND=:8923
     depends_on:
       - portfolio
+    networks:
+      - safe
 
   caddy:
     image: caddy:latest
@@ -41,15 +46,19 @@ services:
       - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-persistent-data:/data #Necessary to have persistent volumes to store SSL certificates as to not get banned from Lets Encrypt, because they only allow so many duplicate certificates per week... though only matters if server is rebooted a few times per week.
+      - caddy-persistent-config:/config #Recommended to use a config volume for caddy's autosave savestate.
     depends_on:
       - anubis
+    networks:
+      - pub
+      - safe
 
-# uncomment for production to block the outbound internet access from inside the container
-#  networks:
-#      - net
-#
-#networks:
-#  net:
-#    internal: true
+networks:
+  pub:
+  safe:
+    internal: true
 
-
+volumes:
+  caddy-persistent-data:
+  caddy-persistent-config:

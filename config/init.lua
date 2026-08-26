@@ -105,22 +105,7 @@ require("lazy").setup({
       })
     end
   },
-
-  -- Space + t Terminal
-  {
-    "akinsho/toggleterm.nvim",
-    version = "*",
-    config = function()
-      require("toggleterm").setup({
-		shell = "/bin/portfolio-shell",
-        direction = "horizontal",
-        size = 15,
-        open_mapping = [[<leader>t]],
-        shade_terminals = true,
-		close_on_exit = false,
-      })
-    end
-  }
+ 
 }, {
    
   -- Route lockfile to RAM instead of trying to write on ronly system.
