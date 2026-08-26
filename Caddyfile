@@ -1,0 +1,5 @@
+localhost {
+		reverse_proxy anubis:8923 {
+				header_up X-Real-Ip {remote_host} # hands the users ip to anubis using an http header, creates spam issue otherwise.
+		}
+}
