@@ -10,8 +10,8 @@ I always wanted a terminal portfolio inside my browser.
 Am most definitely not a competent designer.
 I like neovim.
 
-So using neovim allows you to:
-- have a simple UI that presents Markdown files in a professional yet unique way
+So using neovim:
+- allows you to have a simple UI that presents Markdown files in a professional yet unique way
 - makes creating your own portfolio site super easy with not a lot to configure
 - saves you from design headaches
 - is easily expandable
