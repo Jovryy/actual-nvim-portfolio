@@ -5,7 +5,7 @@ vim.opt.swapfile = false
 vim.opt.shadafile = "NONE"
 vim.opt.number = true
 vim.opt.termguicolors = true
-vim.opt.conceallevel = 2
+vim.opt.conceallevel = 3
 vim.opt.linebreak = true
 vim.g.mapleader = " "
 
@@ -104,6 +104,29 @@ require("lazy").setup({
         }
       })
     end
+  },
+ 
+  -- renderer for markdown
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+	dependencies = {"nvim-tree/nvim-web-devicons"},
+	ft = {"markdown"},
+	config = function ()
+      require("render-markdown").setup({
+		heading = {enabled = false},
+		paragraph = {enabled = false},
+        code = {enabled = false},
+        --bullet = {enabled = false},
+        checkbox = {enabled = false},
+        --quote = {enabled = false},
+        link = {enabled = false},
+		dash = {
+		  enabled = true,
+		  icon = "─",
+		  width = "full",
+		},
+	  })
+	end,
   },
  
 }, {
