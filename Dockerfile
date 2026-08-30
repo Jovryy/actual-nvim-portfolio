@@ -25,5 +25,5 @@ ENV XDG_CACHE_HOME=/tmp/cache
 ENV NVIM_RPLUGIN_MANIFEST=/tmp/rplugin.vim
 
 # finally run ttyd and nvim with the tree-explorer and README file open 
-CMD ["ttyd", "-t", "fontSize=18" ,"-t","theme={\"background\": \"#1e1e2e\"}", "-t", "titleFixed=Joel Volkwein - DevOps && Embedded Engineer", "-W", "-p", "7681", "nvim", "-R", "-n", "README.md", "+NvimTreeOpen"]
+CMD ["ttyd", "-t", "fontSize=18" ,"-t","theme={\"background\": \"#1e1e2e\"}", "-t", "titleFixed=Joel Volkwein - DevOps && Embedded Engineer", "-W", "-p", "7681", "nvim", "-R", "-n", "README.md"]
 

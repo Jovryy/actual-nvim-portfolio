@@ -139,6 +139,16 @@ require("lazy").setup({
 vim.cmd[[colorscheme catppuccin]]
 
 
+-- Mobile compatiblity, if terminal width is too small, dont run NvimTree on startup, and enable scrolling by tapping, as scrolling is buggy using ttyd and nvim.
+if vim.o.columns < 108 then
+		vim.api.nvim_create_autocmd("CursorMoved", {
+				pattern="*",
+				command="normal! zz"
+		})
+else
+		vim.cmd("NvimTreeOpen")
+end
+
 --  KEYBINDS --
 local map = vim.keymap.set
 
