@@ -155,7 +155,17 @@ vim.api.nvim_create_autocmd("VimEnter", {
 						end, 100)
 				end,
 })
-
+-- Security improvement, blocks easy execution of lua commands and scripts inside the commandline
+vim.api.nvim_create_autocmd("CmdlineChanged", {
+		pattern = ":",
+				callback = function()
+						local cmd = vim.fn.getcmdline()
+						if cmd:match("^%s*lua") or cmd:match("^%s*!") or cmd:match("^%s*term") then
+								vim.api.nvim_input("<C-c>")
+								vim.notify("Nice try! ;)", vim.log.levels.WARN)
+						end
+				end,
+})
 
 --  KEYBINDS --
 local map = vim.keymap.set
@@ -170,3 +180,10 @@ map('n', '<leader>c', ':bdelete<CR>', { noremap = true, silent = true })
 -- exit insert mode with Esc so noone gets trapped
 map('t', '<Esc>', [[<C-\><C-n>]], { noremap = true, silent = true })
 map('t', '<leader>t', '<Cmd>ToggleTerm<CR>', { noremap = true, silent = true })
+-- security: block execution of recent (-ly tried) commands
+map('n', 'q:', '<Nop>', { noremap = true, silent = true })
+map('n', 'q/', '<Nop>', { noremap = true, silent = true })
+map('n', 'q?', '<Nop>', { noremap = true, silent = true })
+map('n', 'gQ', '<Nop>', { noremap = true, silent = true })
+-- security: block weird macro recording thing
+map('n', 'q', '<Nop>', { noremap = true, silent = true })
