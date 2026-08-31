@@ -128,6 +128,33 @@ require("lazy").setup({
 	  })
 	end,
   },
+
+  --eye sugar :)
+  {
+    "sphamba/smear-cursor.nvim",
+    opts = {
+      smear_between_buffers = true,
+      cursor_color = "#d38aea",
+    },
+  },
+  {
+    "rcarriga/nvim-notify",
+	config = function()
+      vim.notify = require("notify")
+	  require("notify").setup({
+        background_colour = "#1E1E2E",
+		timeout = 5000,
+		render = "default",
+		icons = {
+          ERROR = "",
+          WARN = "",
+          INFO = "",
+          DEBUG = "",
+          TRACE = "",
+        }
+	  })
+    end
+  },
  
 }, {
    
@@ -138,6 +165,12 @@ require("lazy").setup({
 -- THEME :) --
 vim.cmd[[colorscheme catppuccin]]
 
+local function msg(message,title)
+    local loaded, notify = pcall(require, "notify")
+    if loaded then
+        notify(message, "info", {title = title})
+    end
+end
 
 -- Mobile compatiblity, if terminal width is too small, dont run NvimTree on startup, and enable scrolling by tapping, as scrolling is buggy using ttyd and nvim. 
 --Added 100ms delay to ensure ttyd feeds the correct width into nvim and not create race condition...
@@ -148,9 +181,12 @@ vim.api.nvim_create_autocmd("VimEnter", {
 								vim.api.nvim_create_autocmd("CursorMoved", {
 										pattern="*",
 										command="normal! zz"
-								})
+																		})
+										msg("Thanks for viewing my Portfolio :) \n Tap the screen to scroll", "Welcome! You are using the Mobile View")
+
 								else
 										vim.cmd("NvimTreeOpen")
+										msg("Thanks for viewing my Portfolio :) You can click through my projects in the file tree!", "Welcome!")
 								end
 						end, 100)
 				end,
@@ -162,7 +198,7 @@ vim.api.nvim_create_autocmd("CmdlineChanged", {
 						local cmd = vim.fn.getcmdline()
 						if cmd:match("^%s*lua") or cmd:match("^%s*!") or cmd:match("^%s*term") then
 								vim.api.nvim_input("<C-c>")
-								vim.notify("Nice try! ;)", vim.log.levels.WARN)
+								vim.notify("Sorry, not allowed ;)", vim.log.levels.WARN)
 						end
 				end,
 })
@@ -175,6 +211,10 @@ map('n', '<C-RightMouse>', '<Nop>')
 map('n', '<leader>e', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
 map('n', '<Tab>', ':BufferLineCycleNext<CR>', { noremap = true, silent = true })
 map('n', '<S-Tab>', ':BufferLineCyclePrev<CR>', { noremap = true, silent = true })
+map({'n', 'v'}, '<ScrollWheelUp>', '3k', { noremap = true, silent = true })
+map({'n', 'v'}, '<ScrollWheelDown>', '3j', { noremap = true, silent = true })
+map({'n', 'v'}, '<2-ScrollWheelUp>', '3k', { noremap = true, silent = true })
+map({'n', 'v'}, '<2-ScrollWheelDown>', '3j', { noremap = true, silent = true })
 -- close the current file
 map('n', '<leader>c', ':bdelete<CR>', { noremap = true, silent = true })
 -- exit insert mode with Esc so noone gets trapped
