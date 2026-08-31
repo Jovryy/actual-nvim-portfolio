@@ -129,14 +129,14 @@ require("lazy").setup({
 	end,
   },
 
-  --eye sugar :)
+--[[ eye sugar :) (only enable if you have a good cpu, pretty resource heavy)
   {
     "sphamba/smear-cursor.nvim",
     opts = {
       smear_between_buffers = true,
       cursor_color = "#d38aea",
     },
-  },
+  }, 			]]
   {
     "rcarriga/nvim-notify",
 	config = function()
